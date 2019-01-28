@@ -215,6 +215,6 @@ var PolpMdComponentsModule = /** @class */ (function () {
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { PolpMdIndicatorModal, PolpMdComponentsModule, PolpMdSpinnerServiceImpl as ɵa };
+export { PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map

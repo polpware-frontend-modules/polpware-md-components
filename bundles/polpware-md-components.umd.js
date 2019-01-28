@@ -227,8 +227,8 @@
      */
 
     exports.PolpMdIndicatorModal = PolpMdIndicatorModal;
+    exports.PolpMdSpinnerServiceImpl = PolpMdSpinnerServiceImpl;
     exports.PolpMdComponentsModule = PolpMdComponentsModule;
-    exports.ɵa = PolpMdSpinnerServiceImpl;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
