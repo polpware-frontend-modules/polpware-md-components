@@ -1,9 +1,10 @@
 {
   "name": "@polpware/md-components",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "peerDependencies": {
     "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0"
+    "@angular/core": "^7.2.0",
+    "@polpware/ngx-spinner": "https://github.com/polpware-frontend-modules/polpware-ngx-spinner.git"
   },
   "main": "bundles/polpware-md-components.umd.js",
   "module": "fesm5/polpware-md-components.js",
