@@ -1,5 +1,59 @@
+import { __extends } from 'tslib';
+import { DataSource } from '@angular/cdk/collections';
+import { BehaviorSubject } from 'rxjs';
 import { Component, Inject, Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatProgressSpinnerModule } from '@angular/material';
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/**
+ * @template T
+ */
+var  /**
+ * @template T
+ */
+TableDataSourceAdaptor = /** @class */ (function (_super) {
+    __extends(TableDataSourceAdaptor, _super);
+    function TableDataSourceAdaptor(_database) {
+        var _this = _super.call(this) || this;
+        _this._database = _database;
+        _this._filterChange = new BehaviorSubject('');
+        return _this;
+    }
+    Object.defineProperty(TableDataSourceAdaptor.prototype, "filter", {
+        get: /**
+         * @return {?}
+         */
+        function () { return this._filterChange.value; },
+        set: /**
+         * @param {?} filter
+         * @return {?}
+         */
+        function (filter) { this._filterChange.next(filter); },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * @return {?}
+     */
+    TableDataSourceAdaptor.prototype.connect = /**
+     * @return {?}
+     */
+    function () {
+        return this._database.dataChange.asObservable();
+    };
+    /**
+     * @return {?}
+     */
+    TableDataSourceAdaptor.prototype.disconnect = /**
+     * @return {?}
+     */
+    function () {
+    };
+    return TableDataSourceAdaptor;
+}(DataSource));
 
 /**
  * @fileoverview added by tsickle
@@ -215,6 +269,6 @@ var PolpMdComponentsModule = /** @class */ (function () {
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map

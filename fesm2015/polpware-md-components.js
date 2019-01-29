@@ -1,5 +1,45 @@
+import { DataSource } from '@angular/cdk/collections';
+import { BehaviorSubject } from 'rxjs';
 import { Component, Inject, Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatProgressSpinnerModule } from '@angular/material';
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/**
+ * @template T
+ */
+class TableDataSourceAdaptor extends DataSource {
+    /**
+     * @param {?} _database
+     */
+    constructor(_database) {
+        super();
+        this._database = _database;
+        this._filterChange = new BehaviorSubject('');
+    }
+    /**
+     * @return {?}
+     */
+    get filter() { return this._filterChange.value; }
+    /**
+     * @param {?} filter
+     * @return {?}
+     */
+    set filter(filter) { this._filterChange.next(filter); }
+    /**
+     * @return {?}
+     */
+    connect() {
+        return this._database.dataChange.asObservable();
+    }
+    /**
+     * @return {?}
+     */
+    disconnect() {
+    }
+}
 
 /**
  * @fileoverview added by tsickle
@@ -199,6 +239,6 @@ PolpMdComponentsModule.ctorParameters = () => [
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map
