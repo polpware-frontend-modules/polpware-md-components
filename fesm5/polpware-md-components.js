@@ -103,6 +103,7 @@ var PolpMdSpinnerServiceImpl = /** @class */ (function () {
         this._showingDelay = DefaultShowingDelayPeroid;
         this._dismissingTimer = null;
         this._diaglogRef = null;
+        this._counter = 0;
     }
     /**
      * @param {?} seconds
@@ -130,6 +131,7 @@ var PolpMdSpinnerServiceImpl = /** @class */ (function () {
     function (title) {
         var _this = this;
         if (title === void 0) { title = 'Loading ...'; }
+        this._counter++;
         // If there is one already, use it.
         if (this._diaglogRef) {
             // However, we need to cancel the dismiss timer.
@@ -174,6 +176,10 @@ var PolpMdSpinnerServiceImpl = /** @class */ (function () {
      */
     function () {
         var _this = this;
+        this._counter--;
+        if (this._counter > 0) {
+            return;
+        }
         // If the spinner has not been rendered.
         if (this._showingTimer) {
             clearTimeout(this._showingTimer);

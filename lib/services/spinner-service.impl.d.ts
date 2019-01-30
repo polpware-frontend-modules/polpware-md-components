@@ -6,6 +6,7 @@ export declare class PolpMdSpinnerServiceImpl implements ISpinnerService {
     private _showingTimer;
     private _showingDelay;
     private _dismissingTimer;
+    private _counter;
     constructor(_dialog: MatDialog);
     setDelay(seconds: number): void;
     show(title?: string): void;

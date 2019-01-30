@@ -92,6 +92,7 @@ class PolpMdSpinnerServiceImpl {
         this._showingDelay = DefaultShowingDelayPeroid;
         this._dismissingTimer = null;
         this._diaglogRef = null;
+        this._counter = 0;
     }
     /**
      * @param {?} seconds
@@ -106,6 +107,7 @@ class PolpMdSpinnerServiceImpl {
      * @return {?}
      */
     show(title = 'Loading ...') {
+        this._counter++;
         // If there is one already, use it.
         if (this._diaglogRef) {
             // However, we need to cancel the dismiss timer.
@@ -146,6 +148,10 @@ class PolpMdSpinnerServiceImpl {
      * @return {?}
      */
     hide() {
+        this._counter--;
+        if (this._counter > 0) {
+            return;
+        }
         // If the spinner has not been rendered.
         if (this._showingTimer) {
             clearTimeout(this._showingTimer);
