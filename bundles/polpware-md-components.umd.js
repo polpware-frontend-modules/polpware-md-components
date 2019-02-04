@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('rxjs'), require('@angular/core'), require('@angular/material')) :
-    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'rxjs', '@angular/core', '@angular/material'], factory) :
-    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.rxjs,global.ng.core,global.ng.material));
-}(this, (function (exports,collections,rxjs,core,material) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('rxjs'), require('showdown'), require('@angular/core'), require('@angular/material'), require('@angular/forms'), require('ngx-chips')) :
+    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'rxjs', 'showdown', '@angular/core', '@angular/material', '@angular/forms', 'ngx-chips'], factory) :
+    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.rxjs,global.showdown,global.ng.core,global.ng.material,global.ng.forms,global.ngxChips));
+}(this, (function (exports,collections,rxjs,showdown,core,material,forms,ngxChips) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -258,6 +258,215 @@
      * @fileoverview added by tsickle
      * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
+    /**
+     * @param {?} control
+     * @return {?}
+     */
+    function isValidEmail(control) {
+        /** @type {?} */
+        var value = control.value;
+        /** @type {?} */
+        var re = /\S+@\S+\.\S+/;
+        if (re.test(value)) {
+            return null;
+        }
+        return {
+            'isValidEmail': true
+        };
+    }
+    /**
+     * @param {?} text
+     * @return {?}
+     */
+    function display_name(text) {
+        /* Remove all quotes
+           Remove whitespace, brackets, and commas from the ends. */
+        return text.replace(/(^[\s,>]+)|"|([\s,<]+$)/g, '');
+    }
+    /** @type {?} */
+    var EmailPattern = /[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/g;
+    /**
+     * @param {?} addr_list
+     * @return {?}
+     */
+    function parseEmails(addr_list) {
+        /* Regex source:
+               https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
+            */
+        /** @type {?} */
+        var emails = [];
+        /** @type {?} */
+        var match;
+        /** @type {?} */
+        var idx = 0;
+        while (match = EmailPattern.exec(addr_list)) {
+            /** @type {?} */
+            var display;
+            if (display = display_name(addr_list.substring(idx, match['index']))) {
+                emails.push('"' + display + '" ' + '<' + match[0] + '>');
+            }
+            else {
+                emails.push(match[0]);
+            }
+            idx = match['index'] + match[0].length;
+        }
+        return emails;
+    }
+    // TODO: Improve 
+    /**
+     * @param {?} addr_list
+     * @return {?}
+     */
+    function parseOnlyEmails(addr_list) {
+        /** @type {?} */
+        var emails = [];
+        /** @type {?} */
+        var match;
+        while (match = EmailPattern.exec(addr_list)) {
+            emails.push(match[0]);
+        }
+        return emails;
+    }
+    /**
+     * @abstract
+     */
+    var EmailFormAbstractComponent = /** @class */ (function () {
+        function EmailFormAbstractComponent(dialogRef) {
+            this.dialogRef = dialogRef;
+            this.validators = [isValidEmail];
+            this.errorMessages = {
+                'isValidEmail': 'Please input a valid email'
+            };
+            this.title = 'Send out an email';
+            this.emails = [];
+            this.messageBody = '';
+            this.disableFocusEvent = false;
+        }
+        Object.defineProperty(EmailFormAbstractComponent.prototype, "isSubmitDisabled", {
+            get: /**
+             * @return {?}
+             */ function () {
+                return this.emails.length === 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @param {?} evt
+         * @return {?}
+         */
+        EmailFormAbstractComponent.prototype.onOutOfTagInput = /**
+         * @param {?} evt
+         * @return {?}
+         */
+            function (evt) {
+                var _this = this;
+                if (this.disableFocusEvent) {
+                    return;
+                }
+                evt.preventDefault();
+                evt.stopPropagation();
+                // A tempory hack for fixing the focus issue
+                // on invoking the onAddingRequested method ...
+                /** @type {?} */
+                var emails = parseEmails(this.emailInputBox.formValue);
+                emails.forEach(function (v) {
+                    _this.emails.push(v);
+                });
+                this.emailInputBox.setInputValue('');
+                // Jump to other place
+                this.disableFocusEvent = true;
+                this.emailBody.nativeElement.focus();
+                this.disableFocusEvent = false;
+            };
+        EmailFormAbstractComponent.propDecorators = {
+            emailInputBox: [{ type: core.ViewChild, args: ['emailInputBox',] }],
+            emailBody: [{ type: core.ViewChild, args: ['emailBody',] }]
+        };
+        return EmailFormAbstractComponent;
+    }());
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
+    var EmailFormComponent = /** @class */ (function (_super) {
+        __extends(EmailFormComponent, _super);
+        function EmailFormComponent(dialogRef, data) {
+            var _this = _super.call(this, dialogRef) || this;
+            _this.dialogRef = dialogRef;
+            _this.data = data;
+            _this.messageBody = data.emailBody || '';
+            return _this;
+        }
+        Object.defineProperty(EmailFormComponent.prototype, "isSubmitDisabled", {
+            get: /**
+             * @return {?}
+             */ function () {
+                return this.emails.length === 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // Override
+        // Override
+        /**
+         * @return {?}
+         */
+        EmailFormComponent.prototype.onSubmit =
+            // Override
+            /**
+             * @return {?}
+             */
+            function () {
+                // body
+                /** @type {?} */
+                var messageBody = this.messageBody;
+                // Convert it into html
+                /** @type {?} */
+                var converter = new showdown.Converter();
+                messageBody = converter.makeHtml(messageBody);
+                // Prepare email list
+                /** @type {?} */
+                var emails = [];
+                this.emails.forEach(function (elem) {
+                    /** @type {?} */
+                    var x = elem || (elem.value);
+                    /** @type {?} */
+                    var y = parseOnlyEmails(x);
+                    y.forEach(function (m) {
+                        emails.push(m);
+                    });
+                });
+                /** @type {?} */
+                var outputs = {
+                    confirmed: true,
+                    emailReceivers: emails,
+                    emailBody: messageBody,
+                    emailTitle: this.data.emailTitle || '' // todo:
+                };
+                this.dialogRef.close(outputs);
+            };
+        EmailFormComponent.decorators = [
+            { type: core.Component, args: [{
+                        selector: 'polp-md-email-form',
+                        template: "<h2 mat-dialog-title>\r\n    {{title}}\r\n    <button class=\"float-right\"\r\n            mat-icon-button\r\n            tabIndex=\"-1\"\r\n            [mat-dialog-close]=\"true\">\r\n        <mat-icon>close</mat-icon>\r\n    </button>\r\n</h2>\r\n\r\n<mat-dialog-content>\r\n\r\n    <form name=\"emailForm\" autocomplete=\"off\">\r\n        <div class=\"flex-box flex-column margin-bottom-15\">\r\n            <tag-input [(ngModel)]=\"emails\" #emailInputBox\r\n                       name=\"emailInputs\"\r\n                       [addOnPaste]=\"true\"\r\n                       [modelAsStrings]=\"true\"\r\n                       [trimTags]=\"true\"\r\n                       [editable]=\"true\"\r\n                       (focusout)=\"onOutOfTagInput($event)\"\r\n                       [errorMessages]=\"errorMessages\"\r\n                       [validators]=\"validators\"\r\n                       [secondaryPlaceholder]=\"'Emails'\"\r\n                       [separatorKeyCodes]=\"[32,44,58,59]\"\r\n                       [placeholder]=\"'More Emails'\">\r\n            </tag-input>\r\n\r\n            <div class=\"full-width\">\r\n                <textarea name=\"messageBody\"\r\n                          matInput\r\n                          #emailBody\r\n                          cdkTextareaAutosize\r\n                          cdkAutosizeMinRows=\"2\"\r\n                          cdkAutosizeMaxRows=\"5\"                      \r\n                          placeholder=\"Type your personal message here\"\r\n                          [(ngModel)]=\"messageBody\">\r\n                </textarea>\r\n            </div>\r\n\r\n        </div>\r\n    </form>\r\n\r\n</mat-dialog-content>\r\n\r\n<mat-dialog-actions>\r\n    <button mat-flat-button\r\n            color=\"primary\"\r\n            [disabled]=\"isSubmitDisabled\"\r\n            (click)=\"onSubmit()\">\r\n        Send\r\n    </button>\r\n</mat-dialog-actions>\r\n"
+                    }] }
+        ];
+        /** @nocollapse */
+        EmailFormComponent.ctorParameters = function () {
+            return [
+                { type: material.MatDialogRef },
+                { type: undefined, decorators: [{ type: core.Inject, args: [material.MAT_DIALOG_DATA,] }] }
+            ];
+        };
+        return EmailFormComponent;
+    }(EmailFormAbstractComponent));
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     var PolpMdComponentsModule = /** @class */ (function () {
         function PolpMdComponentsModule(parentModule) {
             if (parentModule) {
@@ -277,13 +486,26 @@
             };
         PolpMdComponentsModule.decorators = [
             { type: core.NgModule, args: [{
-                        declarations: [PolpMdIndicatorModal],
-                        imports: [
-                            material.MatProgressSpinnerModule
+                        declarations: [
+                            PolpMdIndicatorModal,
+                            EmailFormComponent
                         ],
-                        exports: [PolpMdIndicatorModal],
+                        imports: [
+                            forms.FormsModule,
+                            forms.ReactiveFormsModule,
+                            material.MatProgressSpinnerModule,
+                            material.MatDialogModule,
+                            material.MatButtonModule,
+                            material.MatIconModule,
+                            ngxChips.TagInputModule
+                        ],
+                        exports: [
+                            PolpMdIndicatorModal,
+                            EmailFormComponent
+                        ],
                         entryComponents: [
-                            PolpMdIndicatorModal
+                            PolpMdIndicatorModal,
+                            EmailFormComponent
                         ],
                         providers: [
                             PolpMdSpinnerServiceImpl
@@ -312,6 +534,10 @@
     exports.TableDataSourceAdaptor = TableDataSourceAdaptor;
     exports.PolpMdIndicatorModal = PolpMdIndicatorModal;
     exports.PolpMdSpinnerServiceImpl = PolpMdSpinnerServiceImpl;
+    exports.parseEmails = parseEmails;
+    exports.parseOnlyEmails = parseOnlyEmails;
+    exports.EmailFormAbstractComponent = EmailFormAbstractComponent;
+    exports.EmailFormComponent = EmailFormComponent;
     exports.PolpMdComponentsModule = PolpMdComponentsModule;
 
     Object.defineProperty(exports, '__esModule', { value: true });
