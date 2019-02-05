@@ -1,9 +1,11 @@
 import { DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject } from 'rxjs';
 import { Converter } from 'showdown';
-import { Component, Inject, Injectable, ViewChild, NgModule, Optional, SkipSelf } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule } from '@angular/material';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Component, Inject, Injectable, ViewChild, HostBinding, Input, forwardRef, NgModule, Optional, SkipSelf } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule } from '@angular/material';
+import { NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 
 /**
@@ -393,6 +395,187 @@ EmailFormComponent.ctorParameters = () => [
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+class RadioGroupFieldControl {
+    constructor() {
+        // Value
+        this.stateChanges = new Subject();
+        this.id = `radio-group-field-control-${RadioGroupFieldControl.nextId++}`;
+        // Focused 
+        this.focused = false;
+        // Error state
+        this.errorState = false;
+        // control type
+        this.controlType = 'radio-group-field';
+        // Described 
+        this.describedBy = '';
+        this.ngControl = null;
+    }
+    // Value
+    /**
+     * @return {?}
+     */
+    get value() {
+        return this.radioGroup.value;
+    }
+    /**
+     * @param {?} v
+     * @return {?}
+     */
+    set value(v) {
+        this.radioGroup.value = v;
+        this.stateChanges.next();
+    }
+    // Place holder
+    /**
+     * @return {?}
+     */
+    get placeholder() {
+        return this._placeholder;
+    }
+    /**
+     * @param {?} plh
+     * @return {?}
+     */
+    set placeholder(plh) {
+        this._placeholder = plh;
+        this.stateChanges.next();
+    }
+    // Never be empty
+    /**
+     * @return {?}
+     */
+    get empty() {
+        return false;
+    }
+    // should floating 
+    /**
+     * @return {?}
+     */
+    get shouldLabelFloat() {
+        return true;
+    }
+    // required 
+    /**
+     * @return {?}
+     */
+    get required() {
+        return this.radioGroup.required;
+    }
+    /**
+     * @param {?} req
+     * @return {?}
+     */
+    set required(req) {
+        // todo:
+        this.radioGroup.required = coerceBooleanProperty(req);
+        this.stateChanges.next();
+    }
+    /**
+     * @return {?}
+     */
+    get disabled() {
+        return this.radioGroup.disabled;
+    }
+    /**
+     * @param {?} dis
+     * @return {?}
+     */
+    set disabled(dis) {
+        this.radioGroup.disabled = coerceBooleanProperty(dis);
+        this.stateChanges.next();
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+    }
+    // Override 
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.stateChanges.complete();
+    }
+    // set described by ids
+    /**
+     * @param {?} ids
+     * @return {?}
+     */
+    setDescribedByIds(ids) {
+        this.describedBy = ids.join(' ');
+    }
+    // onContainerClick(event: MouseEvent)
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onContainerClick(event) {
+        // todo:
+    }
+    // Control value accessor
+    /**
+     * @param {?} value
+     * @return {?}
+     */
+    writeValue(value) {
+        if (value !== undefined) {
+            this.radioGroup.writeValue(value);
+        }
+    }
+    // todo: When will this be invoked???
+    /**
+     * @param {?} fn
+     * @return {?}
+     */
+    registerOnChange(fn) {
+        this.radioGroup.registerOnChange(fn);
+    }
+    /**
+     * @param {?} fn
+     * @return {?}
+     */
+    registerOnTouched(fn) {
+        this.radioGroup.registerOnTouched(fn);
+    }
+}
+// Unique id
+RadioGroupFieldControl.nextId = 0;
+RadioGroupFieldControl.decorators = [
+    { type: Component, args: [{
+                selector: 'polp-radio-group-field',
+                template: "<mat-radio-group>\n    <mat-radio-button *ngFor=\"let item of radioOptions\" value=\"{{item.value}}\">{{item.text}}</mat-radio-button>\n</mat-radio-group>\n",
+                providers: [
+                    {
+                        provide: MatFormFieldControl,
+                        useExisting: RadioGroupFieldControl
+                    },
+                    {
+                        provide: NG_VALUE_ACCESSOR,
+                        multi: true,
+                        useExisting: forwardRef(() => RadioGroupFieldControl)
+                    }
+                ],
+                styles: [".mat-radio-group .mat-radio-button{margin:0 5px}"]
+            }] }
+];
+/** @nocollapse */
+RadioGroupFieldControl.ctorParameters = () => [];
+RadioGroupFieldControl.propDecorators = {
+    radioGroup: [{ type: ViewChild, args: [MatRadioGroup,] }],
+    id: [{ type: HostBinding }],
+    describedBy: [{ type: HostBinding, args: ['attr.aria-describedby',] }],
+    radioOptions: [{ type: Input }],
+    value: [{ type: Input }],
+    placeholder: [{ type: Input }],
+    shouldLabelFloat: [{ type: HostBinding, args: ['class.floating',] }],
+    required: [{ type: Input }],
+    disabled: [{ type: Input }]
+};
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 class PolpMdComponentsModule {
     /**
      * @param {?} parentModule
@@ -415,20 +598,24 @@ PolpMdComponentsModule.decorators = [
     { type: NgModule, args: [{
                 declarations: [
                     PolpMdIndicatorModal,
-                    EmailFormComponent
+                    EmailFormComponent,
+                    RadioGroupFieldControl
                 ],
                 imports: [
+                    CommonModule,
                     FormsModule,
                     ReactiveFormsModule,
                     MatProgressSpinnerModule,
                     MatDialogModule,
                     MatButtonModule,
                     MatIconModule,
+                    MatRadioModule,
                     TagInputModule
                 ],
                 exports: [
                     PolpMdIndicatorModal,
-                    EmailFormComponent
+                    EmailFormComponent,
+                    RadioGroupFieldControl
                 ],
                 entryComponents: [
                     PolpMdIndicatorModal,
@@ -454,6 +641,6 @@ PolpMdComponentsModule.ctorParameters = () => [
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map
