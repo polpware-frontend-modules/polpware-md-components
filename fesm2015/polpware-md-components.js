@@ -2,9 +2,11 @@ import { DataSource } from '@angular/cdk/collections';
 import { Converter } from 'showdown';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { HttpEventType } from '@angular/common/http';
+import { guid } from '@polpware/fe-utilities';
 import { Component, Inject, Injectable, ViewChild, HostBinding, Input, forwardRef, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 
@@ -576,6 +578,181 @@ RadioGroupFieldControl.propDecorators = {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+class UploadFileComponent {
+    /**
+     * @param {?} dialogRef
+     * @param {?} data
+     */
+    constructor(dialogRef, data) {
+        this.dialogRef = dialogRef;
+        this.data = data;
+        this.files = [];
+        this.responses = [];
+        this.title = this.data.title || '';
+        this.accept = this.data.accept || '*/';
+        this.text = this.data.prelude || '';
+        this.mode = this.data.progressMode || 'indeterminate';
+    }
+    /**
+     * @return {?}
+     */
+    get isCloseDisabled() {
+        return this.files.some(x => x.inProgress);
+    }
+    /**
+     * @return {?}
+     */
+    close() {
+        this.dialogRef.close(this.responses);
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+    }
+    /**
+     * @return {?}
+     */
+    startUpload() {
+        /** @type {?} */
+        const fileUpload = (/** @type {?} */ (document.getElementById('polpFileUpload')));
+        fileUpload.onchange = () => {
+            // Validate inputs
+            /** @type {?} */
+            const message = this.data.validateInput(fileUpload.files);
+            if (message) {
+                this.error = message;
+                return;
+            }
+            for (let index = 0; index < fileUpload.files.length; index++) {
+                /** @type {?} */
+                const file = fileUpload.files[index];
+                this.files.push({
+                    uuid: guid(),
+                    data: file,
+                    state: 'in',
+                    inProgress: false,
+                    progress: 0,
+                    canRetry: false,
+                    canCancel: true,
+                    message: ''
+                });
+            }
+            this.uploadFiles();
+        };
+        fileUpload.click();
+    }
+    /**
+     * @param {?} file
+     * @return {?}
+     */
+    cancelFile(file) {
+        file.sub.unsubscribe();
+        this.removeFileFromArray(file);
+    }
+    /**
+     * @param {?} file
+     * @return {?}
+     */
+    retryFile(file) {
+        this.uploadFile(file);
+        file.canRetry = false;
+    }
+    /**
+     * @private
+     * @param {?} file
+     * @param {?} body
+     * @return {?}
+     */
+    postUploadFile(file, body) {
+        this.responses.push({
+            uuid: file.uuid,
+            body: body
+        });
+        // If this is the last one file which has been uploaded
+        if (this.data.closeOnSunccess) {
+            if (this.files.length === this.responses.length) {
+                // Schedule to close
+                setTimeout(() => {
+                    this.close();
+                });
+            }
+        }
+    }
+    /**
+     * @private
+     * @param {?} file
+     * @return {?}
+     */
+    uploadFile(file) {
+        file.inProgress = true;
+        file.sub = this.data.uploadService.upload(file.data, this.data.uploadUrl, this.data.makeFormData)
+            .subscribe((value) => {
+            switch (value.eventType) {
+                case HttpEventType.UploadProgress:
+                    file.progress = value.percent;
+                    break;
+                case HttpEventType.Response:
+                    file.message = 'Upload Ok.';
+                    file.inProgress = false;
+                    file.canCancel = false;
+                    file.canRetry = false;
+                    this.postUploadFile(file, value.body);
+                    break;
+            }
+        }, (error) => {
+            file.inProgress = false;
+            file.canRetry = true;
+            file.message = `upload failure.`;
+        });
+    }
+    /**
+     * @private
+     * @return {?}
+     */
+    uploadFiles() {
+        /** @type {?} */
+        const fileUpload = (/** @type {?} */ (document.getElementById('polpFileUpload')));
+        fileUpload.value = '';
+        this.files.forEach(file => {
+            this.uploadFile(file);
+        });
+    }
+    /**
+     * @private
+     * @param {?} file
+     * @return {?}
+     */
+    removeFileFromArray(file) {
+        /** @type {?} */
+        const index = this.files.indexOf(file);
+        if (index > -1) {
+            this.files.splice(index, 1);
+        }
+    }
+}
+UploadFileComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'plop-upload-file',
+                template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            [disabled]=\"isCloseDisabled\"            \n            [mat-dialog-close]=\"true\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n    <div class=\"flex-box flex-column\">\n\n        <button mat-flat-button color=\"accent\" (click)=\"startUpload()\">\n            <mat-icon>file_upload</mat-icon>\n            {{text}}\n        </button>\n\n        <p *ngIf=\"error\" color=\"warn\">{{error}}</p>\n        \n        <mat-list>\n            <mat-list-item *ngFor=\"let file of files\">\n                <mat-progress-bar matLine *ngIf=\"file.inProgress\"\n                                  [value]=\"file.progress\" mode=\"{{mode}}\">\n                </mat-progress-bar>\n                <div matLine>\n                    <span>\n                        {{file.data.name}}\n                    </span>\n                    \n                    <span>\n                        {{file.data.message}}\n                    </span>\n                    \n                    <button mat-icon-button title=\"Retry\" (click)=\"retryFile(file)\" *ngIf=\"file.canRetry\">\n                        <mat-icon>refresh</mat-icon>\n                    </button>\n                    <button mat-icon-button title=\"Cancel\" (click)=\"cancelFile(file)\" *ngIf=\"file.canCancel\">\n                        <mat-icon>cancel</mat-icon>\n                    </button>\n                </div>\n            </mat-list-item>\n        </mat-list>\n\n    </div>    \n    \n    <input type=\"file\" id=\"polpFileUpload\" name=\"fileUpload\" multiple=\"multiple\" accept=\"{{accept}}\" style=\"display:none;\"/>\n    \n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-flat-button\n            [disabled]=\"isCloseDisabled\"\n            (click)=\"close()\">\n        Close\n    </button>\n</mat-dialog-actions>\n",
+                styles: [""]
+            }] }
+];
+/** @nocollapse */
+UploadFileComponent.ctorParameters = () => [
+    { type: MatDialogRef },
+    { type: undefined, decorators: [{ type: Inject, args: [MAT_DIALOG_DATA,] }] }
+];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 class PolpMdComponentsModule {
     /**
      * @param {?} parentModule
@@ -599,7 +776,8 @@ PolpMdComponentsModule.decorators = [
                 declarations: [
                     PolpMdIndicatorModal,
                     EmailFormComponent,
-                    RadioGroupFieldControl
+                    RadioGroupFieldControl,
+                    UploadFileComponent
                 ],
                 imports: [
                     CommonModule,
@@ -610,16 +788,20 @@ PolpMdComponentsModule.decorators = [
                     MatButtonModule,
                     MatIconModule,
                     MatRadioModule,
+                    MatProgressBarModule,
+                    MatListModule,
                     TagInputModule
                 ],
                 exports: [
                     PolpMdIndicatorModal,
                     EmailFormComponent,
-                    RadioGroupFieldControl
+                    RadioGroupFieldControl,
+                    UploadFileComponent
                 ],
                 entryComponents: [
                     PolpMdIndicatorModal,
-                    EmailFormComponent
+                    EmailFormComponent,
+                    UploadFileComponent
                 ],
                 providers: [
                     PolpMdSpinnerServiceImpl
@@ -641,6 +823,6 @@ PolpMdComponentsModule.ctorParameters = () => [
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map

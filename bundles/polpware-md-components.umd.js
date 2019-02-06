@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('showdown'), require('rxjs'), require('@angular/cdk/coercion'), require('@angular/core'), require('@angular/common'), require('@angular/material'), require('@angular/forms'), require('ngx-chips')) :
-    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'showdown', 'rxjs', '@angular/cdk/coercion', '@angular/core', '@angular/common', '@angular/material', '@angular/forms', 'ngx-chips'], factory) :
-    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.showdown,global.rxjs,global.ng.cdk.coercion,global.ng.core,global.ng.common,global.ng.material,global.ng.forms,global.ngxChips));
-}(this, (function (exports,collections,showdown,rxjs,coercion,core,common,material,forms,ngxChips) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('showdown'), require('rxjs'), require('@angular/cdk/coercion'), require('@angular/common/http'), require('@polpware/fe-utilities'), require('@angular/core'), require('@angular/common'), require('@angular/material'), require('@angular/forms'), require('ngx-chips')) :
+    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'showdown', 'rxjs', '@angular/cdk/coercion', '@angular/common/http', '@polpware/fe-utilities', '@angular/core', '@angular/common', '@angular/material', '@angular/forms', 'ngx-chips'], factory) :
+    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.showdown,global.rxjs,global.ng.cdk.coercion,global.ng.common.http,global.feUtilities,global.ng.core,global.ng.common,global.ng.material,global.ng.forms,global.ngxChips));
+}(this, (function (exports,collections,showdown,rxjs,coercion,http,feUtilities,core,common,material,forms,ngxChips) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -719,6 +719,219 @@
      * @fileoverview added by tsickle
      * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
+    var UploadFileComponent = /** @class */ (function () {
+        function UploadFileComponent(dialogRef, data) {
+            this.dialogRef = dialogRef;
+            this.data = data;
+            this.files = [];
+            this.responses = [];
+            this.title = this.data.title || '';
+            this.accept = this.data.accept || '*/';
+            this.text = this.data.prelude || '';
+            this.mode = this.data.progressMode || 'indeterminate';
+        }
+        Object.defineProperty(UploadFileComponent.prototype, "isCloseDisabled", {
+            get: /**
+             * @return {?}
+             */ function () {
+                return this.files.some(function (x) { return x.inProgress; });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @return {?}
+         */
+        UploadFileComponent.prototype.close = /**
+         * @return {?}
+         */
+            function () {
+                this.dialogRef.close(this.responses);
+            };
+        /**
+         * @return {?}
+         */
+        UploadFileComponent.prototype.ngOnInit = /**
+         * @return {?}
+         */
+            function () {
+            };
+        /**
+         * @return {?}
+         */
+        UploadFileComponent.prototype.startUpload = /**
+         * @return {?}
+         */
+            function () {
+                var _this = this;
+                /** @type {?} */
+                var fileUpload = ( /** @type {?} */(document.getElementById('polpFileUpload')));
+                fileUpload.onchange = function () {
+                    // Validate inputs
+                    /** @type {?} */
+                    var message = _this.data.validateInput(fileUpload.files);
+                    if (message) {
+                        _this.error = message;
+                        return;
+                    }
+                    for (var index = 0; index < fileUpload.files.length; index++) {
+                        /** @type {?} */
+                        var file = fileUpload.files[index];
+                        _this.files.push({
+                            uuid: feUtilities.guid(),
+                            data: file,
+                            state: 'in',
+                            inProgress: false,
+                            progress: 0,
+                            canRetry: false,
+                            canCancel: true,
+                            message: ''
+                        });
+                    }
+                    _this.uploadFiles();
+                };
+                fileUpload.click();
+            };
+        /**
+         * @param {?} file
+         * @return {?}
+         */
+        UploadFileComponent.prototype.cancelFile = /**
+         * @param {?} file
+         * @return {?}
+         */
+            function (file) {
+                file.sub.unsubscribe();
+                this.removeFileFromArray(file);
+            };
+        /**
+         * @param {?} file
+         * @return {?}
+         */
+        UploadFileComponent.prototype.retryFile = /**
+         * @param {?} file
+         * @return {?}
+         */
+            function (file) {
+                this.uploadFile(file);
+                file.canRetry = false;
+            };
+        /**
+         * @private
+         * @param {?} file
+         * @param {?} body
+         * @return {?}
+         */
+        UploadFileComponent.prototype.postUploadFile = /**
+         * @private
+         * @param {?} file
+         * @param {?} body
+         * @return {?}
+         */
+            function (file, body) {
+                var _this = this;
+                this.responses.push({
+                    uuid: file.uuid,
+                    body: body
+                });
+                // If this is the last one file which has been uploaded
+                if (this.data.closeOnSunccess) {
+                    if (this.files.length === this.responses.length) {
+                        // Schedule to close
+                        setTimeout(function () {
+                            _this.close();
+                        });
+                    }
+                }
+            };
+        /**
+         * @private
+         * @param {?} file
+         * @return {?}
+         */
+        UploadFileComponent.prototype.uploadFile = /**
+         * @private
+         * @param {?} file
+         * @return {?}
+         */
+            function (file) {
+                var _this = this;
+                file.inProgress = true;
+                file.sub = this.data.uploadService.upload(file.data, this.data.uploadUrl, this.data.makeFormData)
+                    .subscribe(function (value) {
+                    switch (value.eventType) {
+                        case http.HttpEventType.UploadProgress:
+                            file.progress = value.percent;
+                            break;
+                        case http.HttpEventType.Response:
+                            file.message = 'Upload Ok.';
+                            file.inProgress = false;
+                            file.canCancel = false;
+                            file.canRetry = false;
+                            _this.postUploadFile(file, value.body);
+                            break;
+                    }
+                }, function (error) {
+                    file.inProgress = false;
+                    file.canRetry = true;
+                    file.message = "upload failure.";
+                });
+            };
+        /**
+         * @private
+         * @return {?}
+         */
+        UploadFileComponent.prototype.uploadFiles = /**
+         * @private
+         * @return {?}
+         */
+            function () {
+                var _this = this;
+                /** @type {?} */
+                var fileUpload = ( /** @type {?} */(document.getElementById('polpFileUpload')));
+                fileUpload.value = '';
+                this.files.forEach(function (file) {
+                    _this.uploadFile(file);
+                });
+            };
+        /**
+         * @private
+         * @param {?} file
+         * @return {?}
+         */
+        UploadFileComponent.prototype.removeFileFromArray = /**
+         * @private
+         * @param {?} file
+         * @return {?}
+         */
+            function (file) {
+                /** @type {?} */
+                var index = this.files.indexOf(file);
+                if (index > -1) {
+                    this.files.splice(index, 1);
+                }
+            };
+        UploadFileComponent.decorators = [
+            { type: core.Component, args: [{
+                        selector: 'plop-upload-file',
+                        template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            [disabled]=\"isCloseDisabled\"            \n            [mat-dialog-close]=\"true\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n    <div class=\"flex-box flex-column\">\n\n        <button mat-flat-button color=\"accent\" (click)=\"startUpload()\">\n            <mat-icon>file_upload</mat-icon>\n            {{text}}\n        </button>\n\n        <p *ngIf=\"error\" color=\"warn\">{{error}}</p>\n        \n        <mat-list>\n            <mat-list-item *ngFor=\"let file of files\">\n                <mat-progress-bar matLine *ngIf=\"file.inProgress\"\n                                  [value]=\"file.progress\" mode=\"{{mode}}\">\n                </mat-progress-bar>\n                <div matLine>\n                    <span>\n                        {{file.data.name}}\n                    </span>\n                    \n                    <span>\n                        {{file.data.message}}\n                    </span>\n                    \n                    <button mat-icon-button title=\"Retry\" (click)=\"retryFile(file)\" *ngIf=\"file.canRetry\">\n                        <mat-icon>refresh</mat-icon>\n                    </button>\n                    <button mat-icon-button title=\"Cancel\" (click)=\"cancelFile(file)\" *ngIf=\"file.canCancel\">\n                        <mat-icon>cancel</mat-icon>\n                    </button>\n                </div>\n            </mat-list-item>\n        </mat-list>\n\n    </div>    \n    \n    <input type=\"file\" id=\"polpFileUpload\" name=\"fileUpload\" multiple=\"multiple\" accept=\"{{accept}}\" style=\"display:none;\"/>\n    \n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-flat-button\n            [disabled]=\"isCloseDisabled\"\n            (click)=\"close()\">\n        Close\n    </button>\n</mat-dialog-actions>\n",
+                        styles: [""]
+                    }] }
+        ];
+        /** @nocollapse */
+        UploadFileComponent.ctorParameters = function () {
+            return [
+                { type: material.MatDialogRef },
+                { type: undefined, decorators: [{ type: core.Inject, args: [material.MAT_DIALOG_DATA,] }] }
+            ];
+        };
+        return UploadFileComponent;
+    }());
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     var PolpMdComponentsModule = /** @class */ (function () {
         function PolpMdComponentsModule(parentModule) {
             if (parentModule) {
@@ -741,7 +954,8 @@
                         declarations: [
                             PolpMdIndicatorModal,
                             EmailFormComponent,
-                            RadioGroupFieldControl
+                            RadioGroupFieldControl,
+                            UploadFileComponent
                         ],
                         imports: [
                             common.CommonModule,
@@ -752,16 +966,20 @@
                             material.MatButtonModule,
                             material.MatIconModule,
                             material.MatRadioModule,
+                            material.MatProgressBarModule,
+                            material.MatListModule,
                             ngxChips.TagInputModule
                         ],
                         exports: [
                             PolpMdIndicatorModal,
                             EmailFormComponent,
-                            RadioGroupFieldControl
+                            RadioGroupFieldControl,
+                            UploadFileComponent
                         ],
                         entryComponents: [
                             PolpMdIndicatorModal,
-                            EmailFormComponent
+                            EmailFormComponent,
+                            UploadFileComponent
                         ],
                         providers: [
                             PolpMdSpinnerServiceImpl
@@ -795,6 +1013,7 @@
     exports.EmailFormAbstractComponent = EmailFormAbstractComponent;
     exports.EmailFormComponent = EmailFormComponent;
     exports.RadioGroupFieldControl = RadioGroupFieldControl;
+    exports.UploadFileComponent = UploadFileComponent;
     exports.PolpMdComponentsModule = PolpMdComponentsModule;
 
     Object.defineProperty(exports, '__esModule', { value: true });
