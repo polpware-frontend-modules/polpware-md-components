@@ -373,6 +373,7 @@ var EmailFormComponent = /** @class */ (function (_super) {
         var _this = _super.call(this, dialogRef) || this;
         _this.dialogRef = dialogRef;
         _this.data = data;
+        data.title && (_this.title = data.title);
         _this.messageBody = data.emailBody || '';
         return _this;
     }

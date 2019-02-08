@@ -340,6 +340,7 @@ class EmailFormComponent extends EmailFormAbstractComponent {
         super(dialogRef);
         this.dialogRef = dialogRef;
         this.data = data;
+        data.title && (this.title = data.title);
         this.messageBody = data.emailBody || '';
     }
     /**

@@ -1,6 +1,7 @@
 import { MatDialogRef } from '@angular/material';
 import { EmailFormAbstractComponent } from './email-form-abstract.component';
 export interface IEmailFormDefaultInput {
+    title: string;
     emailBody: string;
     emailTitle: string;
 }
