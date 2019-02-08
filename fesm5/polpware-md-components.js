@@ -5,12 +5,12 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { HttpEventType } from '@angular/common/http';
 import { guid } from '@polpware/fe-utilities';
-import { Component, Inject, Injectable, ViewChild, HostBinding, Input, forwardRef, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 import { AutosizeModule } from 'ngx-autosize';
+import { Component, Inject, Injectable, ViewChild, HostBinding, Input, forwardRef, NgModule, Optional, SkipSelf } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
 
 /**
  * @fileoverview added by tsickle
@@ -918,6 +918,36 @@ var UploadFileComponent = /** @class */ (function () {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+var ConfirmDialogComponent = /** @class */ (function () {
+    function ConfirmDialogComponent(data) {
+        this.data = data;
+    }
+    /**
+     * @return {?}
+     */
+    ConfirmDialogComponent.prototype.ngOnInit = /**
+     * @return {?}
+     */
+    function () {
+    };
+    ConfirmDialogComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'polp-confirm-dialog',
+                    template: "<h1 mat-dialog-title>{{data.title}}</h1>\n<div mat-dialog-content>\n    {{data.message}}\n</div>\n<mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"false\" color=\"primary\">No</button>\n    <button mat-button [mat-dialog-close]=\"true\" color=\"warn\">Yes</button>\n</mat-dialog-actions>`,\n",
+                    styles: [""]
+                }] }
+    ];
+    /** @nocollapse */
+    ConfirmDialogComponent.ctorParameters = function () { return [
+        { type: undefined, decorators: [{ type: Inject, args: [MAT_DIALOG_DATA,] }] }
+    ]; };
+    return ConfirmDialogComponent;
+}());
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 var PolpMdComponentsModule = /** @class */ (function () {
     function PolpMdComponentsModule(parentModule) {
         if (parentModule) {
@@ -941,7 +971,8 @@ var PolpMdComponentsModule = /** @class */ (function () {
                         PolpMdIndicatorModal,
                         EmailFormComponent,
                         RadioGroupFieldControl,
-                        UploadFileComponent
+                        UploadFileComponent,
+                        ConfirmDialogComponent
                     ],
                     imports: [
                         CommonModule,
@@ -961,12 +992,14 @@ var PolpMdComponentsModule = /** @class */ (function () {
                         PolpMdIndicatorModal,
                         EmailFormComponent,
                         RadioGroupFieldControl,
-                        UploadFileComponent
+                        UploadFileComponent,
+                        ConfirmDialogComponent
                     ],
                     entryComponents: [
                         PolpMdIndicatorModal,
                         EmailFormComponent,
-                        UploadFileComponent
+                        UploadFileComponent,
+                        ConfirmDialogComponent
                     ],
                     providers: [
                         PolpMdSpinnerServiceImpl
@@ -990,6 +1023,6 @@ var PolpMdComponentsModule = /** @class */ (function () {
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, PolpMdComponentsModule, ConfirmDialogComponent as ɵa };
 
 //# sourceMappingURL=polpware-md-components.js.map
