@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('showdown'), require('rxjs'), require('@angular/cdk/coercion'), require('@angular/common/http'), require('@polpware/fe-utilities'), require('@angular/common'), require('@angular/forms'), require('ngx-chips'), require('ngx-autosize'), require('@angular/core'), require('@angular/material')) :
-    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'showdown', 'rxjs', '@angular/cdk/coercion', '@angular/common/http', '@polpware/fe-utilities', '@angular/common', '@angular/forms', 'ngx-chips', 'ngx-autosize', '@angular/core', '@angular/material'], factory) :
-    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.showdown,global.rxjs,global.ng.cdk.coercion,global.ng.common.http,global.feUtilities,global.ng.common,global.ng.forms,global.ngxChips,global.ngxAutosize,global.ng.core,global.ng.material));
-}(this, (function (exports,collections,showdown,rxjs,coercion,http,feUtilities,common,forms,ngxChips,ngxAutosize,core,material) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('showdown'), require('rxjs'), require('@angular/cdk/coercion'), require('@angular/common/http'), require('@polpware/fe-utilities'), require('@angular/core'), require('@angular/common'), require('@angular/material'), require('@angular/forms'), require('ngx-chips'), require('ngx-autosize')) :
+    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'showdown', 'rxjs', '@angular/cdk/coercion', '@angular/common/http', '@polpware/fe-utilities', '@angular/core', '@angular/common', '@angular/material', '@angular/forms', 'ngx-chips', 'ngx-autosize'], factory) :
+    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.showdown,global.rxjs,global.ng.cdk.coercion,global.ng.common.http,global.feUtilities,global.ng.core,global.ng.common,global.ng.material,global.ng.forms,global.ngxChips,global.ngxAutosize));
+}(this, (function (exports,collections,showdown,rxjs,coercion,http,feUtilities,core,common,material,forms,ngxChips,ngxAutosize) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1051,8 +1051,8 @@
     exports.EmailFormComponent = EmailFormComponent;
     exports.RadioGroupFieldControl = RadioGroupFieldControl;
     exports.UploadFileComponent = UploadFileComponent;
+    exports.ConfirmDialogComponent = ConfirmDialogComponent;
     exports.PolpMdComponentsModule = PolpMdComponentsModule;
-    exports.ɵa = ConfirmDialogComponent;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

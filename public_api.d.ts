@@ -6,4 +6,5 @@ export * from './lib/email-form/email-form.component';
 export * from './lib/radio-group-field/radio-group-field.component';
 export * from './lib/upload-file/upload-file.interface';
 export * from './lib/upload-file/upload-file.component';
+export * from './lib/confirm-dialog/confirm-dialog.component';
 export * from './lib/md-components.module';
