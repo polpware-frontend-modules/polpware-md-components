@@ -797,7 +797,8 @@ SnackbarErrorComponent.decorators = [
                 selector: 'polp-snackbar-error',
                 template: `
         <i class="material-icons">error</i>
-        <span>{{data}}</span>`
+        <span>{{data}}</span>`,
+                styles: [':host { display: inline-flex; align-items: center; } ']
             }] }
 ];
 /** @nocollapse */
@@ -822,7 +823,8 @@ SnackbarInfoComponent.decorators = [
                 selector: 'polp-snackbar-info',
                 template: `
         <i class="material-icons">notifications</i>
-        <span>{{data}}</span>`
+        <span>{{data}}</span>`,
+                styles: [':host { display: inline-flex; align-items: center; } ']
             }] }
 ];
 /** @nocollapse */
@@ -847,7 +849,8 @@ SnackbarSuccessComponent.decorators = [
                 selector: 'polp-snackbar-success',
                 template: `
         <i class="material-icons">check_circle</i>
-        <span>{{data}}</span>`
+        <span>{{data}}</span>`,
+                styles: [':host { display: inline-flex; align-items: center; } ']
             }] }
 ];
 /** @nocollapse */
@@ -872,7 +875,8 @@ SnackbarWarnComponent.decorators = [
                 selector: 'polp-snackbar-warn',
                 template: `
         <i class="material-icons">warning</i>
-        <span>{{data}}</span>`
+        <span>{{data}}</span>`,
+                styles: [':host { display: inline-flex; align-items: center; } ']
             }] }
 ];
 /** @nocollapse */

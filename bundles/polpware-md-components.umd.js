@@ -972,7 +972,8 @@
         SnackbarErrorComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'polp-snackbar-error',
-                        template: "\n        <i class=\"material-icons\">error</i>\n        <span>{{data}}</span>"
+                        template: "\n        <i class=\"material-icons\">error</i>\n        <span>{{data}}</span>",
+                        styles: [':host { display: inline-flex; align-items: center; } ']
                     }] }
         ];
         /** @nocollapse */
@@ -995,7 +996,8 @@
         SnackbarInfoComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'polp-snackbar-info',
-                        template: "\n        <i class=\"material-icons\">notifications</i>\n        <span>{{data}}</span>"
+                        template: "\n        <i class=\"material-icons\">notifications</i>\n        <span>{{data}}</span>",
+                        styles: [':host { display: inline-flex; align-items: center; } ']
                     }] }
         ];
         /** @nocollapse */
@@ -1018,7 +1020,8 @@
         SnackbarSuccessComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'polp-snackbar-success',
-                        template: "\n        <i class=\"material-icons\">check_circle</i>\n        <span>{{data}}</span>"
+                        template: "\n        <i class=\"material-icons\">check_circle</i>\n        <span>{{data}}</span>",
+                        styles: [':host { display: inline-flex; align-items: center; } ']
                     }] }
         ];
         /** @nocollapse */
@@ -1041,7 +1044,8 @@
         SnackbarWarnComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'polp-snackbar-warn',
-                        template: "\n        <i class=\"material-icons\">warning</i>\n        <span>{{data}}</span>"
+                        template: "\n        <i class=\"material-icons\">warning</i>\n        <span>{{data}}</span>",
+                        styles: [':host { display: inline-flex; align-items: center; } ']
                     }] }
         ];
         /** @nocollapse */
