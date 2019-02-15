@@ -7,7 +7,7 @@ import { HttpEventType } from '@angular/common/http';
 import { guid } from '@polpware/fe-utilities';
 import { Component, Inject, Injectable, ViewChild, HostBinding, Input, forwardRef, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MAT_SNACK_BAR_DATA, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 import { AutosizeModule } from 'ngx-autosize';
@@ -948,6 +948,90 @@ var ConfirmDialogComponent = /** @class */ (function () {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+var SnackbarErrorComponent = /** @class */ (function () {
+    function SnackbarErrorComponent(data) {
+        this.data = data;
+    }
+    SnackbarErrorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'polp-snackbar-error',
+                    template: "\n        <i class=\"material-icons\">error</i>\n        <span>{{data}}</span>"
+                }] }
+    ];
+    /** @nocollapse */
+    SnackbarErrorComponent.ctorParameters = function () { return [
+        { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+    ]; };
+    return SnackbarErrorComponent;
+}());
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+var SnackbarInfoComponent = /** @class */ (function () {
+    function SnackbarInfoComponent(data) {
+        this.data = data;
+    }
+    SnackbarInfoComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'polp-snackbar-info',
+                    template: "\n        <i class=\"material-icons\">notifications</i>\n        <span>{{data}}</span>"
+                }] }
+    ];
+    /** @nocollapse */
+    SnackbarInfoComponent.ctorParameters = function () { return [
+        { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+    ]; };
+    return SnackbarInfoComponent;
+}());
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+var SnackbarSuccessComponent = /** @class */ (function () {
+    function SnackbarSuccessComponent(data) {
+        this.data = data;
+    }
+    SnackbarSuccessComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'polp-snackbar-success',
+                    template: "\n        <i class=\"material-icons\">check_circle</i>\n        <span>{{data}}</span>"
+                }] }
+    ];
+    /** @nocollapse */
+    SnackbarSuccessComponent.ctorParameters = function () { return [
+        { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+    ]; };
+    return SnackbarSuccessComponent;
+}());
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+var SnackbarWarnComponent = /** @class */ (function () {
+    function SnackbarWarnComponent(data) {
+        this.data = data;
+    }
+    SnackbarWarnComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'polp-snackbar-warn',
+                    template: "\n        <i class=\"material-icons\">warning</i>\n        <span>{{data}}</span>"
+                }] }
+    ];
+    /** @nocollapse */
+    SnackbarWarnComponent.ctorParameters = function () { return [
+        { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+    ]; };
+    return SnackbarWarnComponent;
+}());
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 var PolpMdComponentsModule = /** @class */ (function () {
     function PolpMdComponentsModule(parentModule) {
         if (parentModule) {
@@ -972,7 +1056,11 @@ var PolpMdComponentsModule = /** @class */ (function () {
                         EmailFormComponent,
                         RadioGroupFieldControl,
                         UploadFileComponent,
-                        ConfirmDialogComponent
+                        ConfirmDialogComponent,
+                        SnackbarErrorComponent,
+                        SnackbarInfoComponent,
+                        SnackbarSuccessComponent,
+                        SnackbarWarnComponent
                     ],
                     imports: [
                         CommonModule,
@@ -999,7 +1087,11 @@ var PolpMdComponentsModule = /** @class */ (function () {
                         PolpMdIndicatorModal,
                         EmailFormComponent,
                         UploadFileComponent,
-                        ConfirmDialogComponent
+                        ConfirmDialogComponent,
+                        SnackbarErrorComponent,
+                        SnackbarInfoComponent,
+                        SnackbarSuccessComponent,
+                        SnackbarWarnComponent
                     ],
                     providers: [
                         PolpMdSpinnerServiceImpl
@@ -1023,6 +1115,6 @@ var PolpMdComponentsModule = /** @class */ (function () {
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, ConfirmDialogComponent, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, ConfirmDialogComponent, SnackbarErrorComponent, SnackbarInfoComponent, SnackbarSuccessComponent, SnackbarWarnComponent, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map

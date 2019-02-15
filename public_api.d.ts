@@ -7,4 +7,8 @@ export * from './lib/radio-group-field/radio-group-field.component';
 export * from './lib/upload-file/upload-file.interface';
 export * from './lib/upload-file/upload-file.component';
 export * from './lib/confirm-dialog/confirm-dialog.component';
+export * from './lib/snackbar/snackbar-error.component';
+export * from './lib/snackbar/snackbar-info.component';
+export * from './lib/snackbar/snackbar-success.component';
+export * from './lib/snackbar/snackbar-warn.component';
 export * from './lib/md-components.module';

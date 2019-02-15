@@ -6,7 +6,7 @@ import { HttpEventType } from '@angular/common/http';
 import { guid } from '@polpware/fe-utilities';
 import { Component, Inject, Injectable, ViewChild, HostBinding, Input, forwardRef, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatFormFieldControl, MatRadioGroup, MAT_SNACK_BAR_DATA, MatProgressSpinnerModule, MatDialogModule, MatButtonModule, MatIconModule, MatRadioModule, MatProgressBarModule, MatListModule } from '@angular/material';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 import { AutosizeModule } from 'ngx-autosize';
@@ -784,6 +784,106 @@ ConfirmDialogComponent.ctorParameters = () => [
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+class SnackbarErrorComponent {
+    /**
+     * @param {?} data
+     */
+    constructor(data) {
+        this.data = data;
+    }
+}
+SnackbarErrorComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'polp-snackbar-error',
+                template: `
+        <i class="material-icons">error</i>
+        <span>{{data}}</span>`
+            }] }
+];
+/** @nocollapse */
+SnackbarErrorComponent.ctorParameters = () => [
+    { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+class SnackbarInfoComponent {
+    /**
+     * @param {?} data
+     */
+    constructor(data) {
+        this.data = data;
+    }
+}
+SnackbarInfoComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'polp-snackbar-info',
+                template: `
+        <i class="material-icons">notifications</i>
+        <span>{{data}}</span>`
+            }] }
+];
+/** @nocollapse */
+SnackbarInfoComponent.ctorParameters = () => [
+    { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+class SnackbarSuccessComponent {
+    /**
+     * @param {?} data
+     */
+    constructor(data) {
+        this.data = data;
+    }
+}
+SnackbarSuccessComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'polp-snackbar-success',
+                template: `
+        <i class="material-icons">check_circle</i>
+        <span>{{data}}</span>`
+            }] }
+];
+/** @nocollapse */
+SnackbarSuccessComponent.ctorParameters = () => [
+    { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+class SnackbarWarnComponent {
+    /**
+     * @param {?} data
+     */
+    constructor(data) {
+        this.data = data;
+    }
+}
+SnackbarWarnComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'polp-snackbar-warn',
+                template: `
+        <i class="material-icons">warning</i>
+        <span>{{data}}</span>`
+            }] }
+];
+/** @nocollapse */
+SnackbarWarnComponent.ctorParameters = () => [
+    { type: undefined, decorators: [{ type: Inject, args: [MAT_SNACK_BAR_DATA,] }] }
+];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 class PolpMdComponentsModule {
     /**
      * @param {?} parentModule
@@ -809,7 +909,11 @@ PolpMdComponentsModule.decorators = [
                     EmailFormComponent,
                     RadioGroupFieldControl,
                     UploadFileComponent,
-                    ConfirmDialogComponent
+                    ConfirmDialogComponent,
+                    SnackbarErrorComponent,
+                    SnackbarInfoComponent,
+                    SnackbarSuccessComponent,
+                    SnackbarWarnComponent
                 ],
                 imports: [
                     CommonModule,
@@ -836,7 +940,11 @@ PolpMdComponentsModule.decorators = [
                     PolpMdIndicatorModal,
                     EmailFormComponent,
                     UploadFileComponent,
-                    ConfirmDialogComponent
+                    ConfirmDialogComponent,
+                    SnackbarErrorComponent,
+                    SnackbarInfoComponent,
+                    SnackbarSuccessComponent,
+                    SnackbarWarnComponent
                 ],
                 providers: [
                     PolpMdSpinnerServiceImpl
@@ -858,6 +966,6 @@ PolpMdComponentsModule.ctorParameters = () => [
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, ConfirmDialogComponent, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, ConfirmDialogComponent, SnackbarErrorComponent, SnackbarInfoComponent, SnackbarSuccessComponent, SnackbarWarnComponent, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map
