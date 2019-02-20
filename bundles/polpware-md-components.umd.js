@@ -965,6 +965,73 @@
      * @fileoverview added by tsickle
      * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
+    var MessageFormComponent = /** @class */ (function () {
+        function MessageFormComponent(dialogRef, data) {
+            this.dialogRef = dialogRef;
+            this.data = data;
+            data.title && (this.title = data.title);
+            this.messageBody = data.message || '';
+        }
+        Object.defineProperty(MessageFormComponent.prototype, "isSubmitDisabled", {
+            get: /**
+             * @return {?}
+             */ function () {
+                return !this.messageBody;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @return {?}
+         */
+        MessageFormComponent.prototype.ngOnInit = /**
+         * @return {?}
+         */
+            function () {
+            };
+        /**
+         * @return {?}
+         */
+        MessageFormComponent.prototype.close = /**
+         * @return {?}
+         */
+            function () {
+                this.dialogRef.close({
+                    message: ''
+                });
+            };
+        /**
+         * @return {?}
+         */
+        MessageFormComponent.prototype.confirm = /**
+         * @return {?}
+         */
+            function () {
+                this.dialogRef.close({
+                    message: this.messageBody
+                });
+            };
+        MessageFormComponent.decorators = [
+            { type: core.Component, args: [{
+                        selector: 'polp-md-message-form',
+                        template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            (click)=\"close()\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n        <div class=\"flex-box flex-column margin-bottom-15\">\n            <div class=\"full-width margin-top-10\">\n                <textarea name=\"messageBody\"\n                          class=\"full-width\"\n                          #emailBody\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\n                          placeholder=\"Type your personal message here\"\n                          [(ngModel)]=\"messageBody\">\n                </textarea>\n            </div>\n\n        </div>\n\n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-button (click)=\"close()\">No Thanks</button>\n    <button mat-flat-button\n            color=\"primary\"\n            [disabled]=\"isSubmitDisabled\"\n            (click)=\"confirm()\">\n        Ok\n    </button>\n</mat-dialog-actions>\n",
+                        styles: [""]
+                    }] }
+        ];
+        /** @nocollapse */
+        MessageFormComponent.ctorParameters = function () {
+            return [
+                { type: material.MatDialogRef },
+                { type: undefined, decorators: [{ type: core.Inject, args: [material.MAT_DIALOG_DATA,] }] }
+            ];
+        };
+        return MessageFormComponent;
+    }());
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     var SnackbarErrorComponent = /** @class */ (function () {
         function SnackbarErrorComponent(data) {
             this.data = data;
@@ -1089,7 +1156,8 @@
                             SnackbarErrorComponent,
                             SnackbarInfoComponent,
                             SnackbarSuccessComponent,
-                            SnackbarWarnComponent
+                            SnackbarWarnComponent,
+                            MessageFormComponent
                         ],
                         imports: [
                             common.CommonModule,
@@ -1120,7 +1188,8 @@
                             SnackbarErrorComponent,
                             SnackbarInfoComponent,
                             SnackbarSuccessComponent,
-                            SnackbarWarnComponent
+                            SnackbarWarnComponent,
+                            MessageFormComponent
                         ],
                         providers: [
                             PolpMdSpinnerServiceImpl
@@ -1156,6 +1225,7 @@
     exports.RadioGroupFieldControl = RadioGroupFieldControl;
     exports.UploadFileComponent = UploadFileComponent;
     exports.ConfirmDialogComponent = ConfirmDialogComponent;
+    exports.MessageFormComponent = MessageFormComponent;
     exports.SnackbarErrorComponent = SnackbarErrorComponent;
     exports.SnackbarInfoComponent = SnackbarInfoComponent;
     exports.SnackbarSuccessComponent = SnackbarSuccessComponent;
