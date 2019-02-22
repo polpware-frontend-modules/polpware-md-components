@@ -1,5 +1,4 @@
 import { DataSource } from '@angular/cdk/collections';
-import { Converter } from 'showdown';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { HttpEventType } from '@angular/common/http';
@@ -184,6 +183,7 @@ class PolpMdSpinnerServiceImpl {
         // Schedule to dismiss the spinner
         if (this._diaglogRef) {
             this._dismissingTimer = setTimeout(() => {
+                this._dismissingTimer = null;
                 // Dismiss the dialog
                 if (this._diaglogRef) {
                     this._diaglogRef.close();
@@ -326,74 +326,6 @@ EmailFormAbstractComponent.propDecorators = {
     emailInputBox: [{ type: ViewChild, args: ['emailInputBox',] }],
     emailBody: [{ type: ViewChild, args: ['emailBody',] }]
 };
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
- */
-class EmailFormComponent extends EmailFormAbstractComponent {
-    /**
-     * @param {?} dialogRef
-     * @param {?} data
-     */
-    constructor(dialogRef, data) {
-        super(dialogRef);
-        this.dialogRef = dialogRef;
-        this.data = data;
-        data.title && (this.title = data.title);
-        this.messageBody = data.emailBody || '';
-    }
-    /**
-     * @return {?}
-     */
-    get isSubmitDisabled() {
-        return this.emails.length === 0;
-    }
-    // Override
-    /**
-     * @return {?}
-     */
-    onSubmit() {
-        // body
-        /** @type {?} */
-        let messageBody = this.messageBody;
-        // Convert it into html
-        /** @type {?} */
-        const converter = new Converter();
-        messageBody = converter.makeHtml(messageBody);
-        // Prepare email list
-        /** @type {?} */
-        const emails = [];
-        this.emails.forEach(elem => {
-            /** @type {?} */
-            let x = elem || (elem.value);
-            /** @type {?} */
-            const y = parseOnlyEmails(x);
-            y.forEach(m => {
-                emails.push(m);
-            });
-        });
-        /** @type {?} */
-        const outputs = {
-            confirmed: true,
-            emailReceivers: emails,
-            emailBody: messageBody,
-            emailTitle: this.data.emailTitle || '' // todo:
-        };
-        this.dialogRef.close(outputs);
-    }
-}
-EmailFormComponent.decorators = [
-    { type: Component, args: [{
-                selector: 'polp-md-email-form',
-                template: "<h2 mat-dialog-title>\r\n    {{title}}\r\n    <button class=\"float-right\"\r\n            mat-icon-button\r\n            tabIndex=\"-1\"\r\n            [mat-dialog-close]=\"true\">\r\n        <mat-icon>close</mat-icon>\r\n    </button>\r\n</h2>\r\n\r\n<mat-dialog-content>\r\n\r\n    <form name=\"emailForm\" autocomplete=\"off\">\r\n        <div class=\"flex-box flex-column margin-bottom-15\">\r\n            <tag-input [(ngModel)]=\"emails\" #emailInputBox\r\n                       name=\"emailInputs\"\r\n                       [addOnPaste]=\"true\"\r\n                       [modelAsStrings]=\"true\"\r\n                       [trimTags]=\"true\"\r\n                       [editable]=\"true\"\r\n                       (focusout)=\"onOutOfTagInput($event)\"\r\n                       [errorMessages]=\"errorMessages\"\r\n                       [validators]=\"validators\"\r\n                       [secondaryPlaceholder]=\"'Emails'\"\r\n                       [separatorKeyCodes]=\"[32,44,58,59]\"\r\n                       [placeholder]=\"'More Emails'\">\r\n            </tag-input>\r\n\r\n            <div class=\"full-width margin-top-10\">\r\n                <textarea name=\"messageBody\"\r\n                          class=\"full-width\"\r\n                          #emailBody\r\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\r\n                          placeholder=\"Type your personal message here\"\r\n                          [(ngModel)]=\"messageBody\">\r\n                </textarea>\r\n            </div>\r\n\r\n        </div>\r\n    </form>\r\n\r\n</mat-dialog-content>\r\n\r\n<mat-dialog-actions>\r\n    <button mat-flat-button\r\n            color=\"primary\"\r\n            [disabled]=\"isSubmitDisabled\"\r\n            (click)=\"onSubmit()\">\r\n        Send\r\n    </button>\r\n</mat-dialog-actions>\r\n"
-            }] }
-];
-/** @nocollapse */
-EmailFormComponent.ctorParameters = () => [
-    { type: MatDialogRef },
-    { type: undefined, decorators: [{ type: Inject, args: [MAT_DIALOG_DATA,] }] }
-];
 
 /**
  * @fileoverview added by tsickle
@@ -826,7 +758,7 @@ class MessageFormComponent {
 MessageFormComponent.decorators = [
     { type: Component, args: [{
                 selector: 'polp-md-message-form',
-                template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            (click)=\"close()\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n        <div class=\"flex-box flex-column margin-bottom-15\">\n            <div class=\"full-width margin-top-10\">\n                <textarea name=\"messageBody\"\n                          class=\"full-width\"\n                          #emailBody\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\n                          placeholder=\"Type your personal message here\"\n                          [(ngModel)]=\"messageBody\">\n                </textarea>\n            </div>\n\n        </div>\n\n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-button (click)=\"close()\">No Thanks</button>\n    <button mat-flat-button\n            color=\"primary\"\n            [disabled]=\"isSubmitDisabled\"\n            (click)=\"confirm()\">\n        Ok\n    </button>\n</mat-dialog-actions>\n",
+                template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            (click)=\"close()\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n        <div class=\"flex-box flex-column margin-bottom-15\">\n            <div class=\"full-width margin-top-10\">\n                <textarea name=\"messageBodyInput\"\n                          class=\"full-width\"\n                          #emailBody\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\n                          placeholder=\"Type your personal message here\"\n                          [(ngModel)]=\"messageBody\">\n                </textarea>\n            </div>\n\n        </div>\n\n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-button (click)=\"close()\">No Thanks</button>\n    <button mat-flat-button\n            color=\"primary\"\n            [disabled]=\"isSubmitDisabled\"\n            (click)=\"confirm()\">\n        Ok\n    </button>\n</mat-dialog-actions>\n",
                 styles: [""]
             }] }
 ];
@@ -944,6 +876,57 @@ SnackbarWarnComponent.ctorParameters = () => [
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+/** @enum {number} */
+const AlertTypeEnum = {
+    none: 0,
+    info: 1,
+    warning: 2,
+    running: 3,
+    success: 4,
+    error: 5,
+};
+AlertTypeEnum[AlertTypeEnum.none] = 'none';
+AlertTypeEnum[AlertTypeEnum.info] = 'info';
+AlertTypeEnum[AlertTypeEnum.warning] = 'warning';
+AlertTypeEnum[AlertTypeEnum.running] = 'running';
+AlertTypeEnum[AlertTypeEnum.success] = 'success';
+AlertTypeEnum[AlertTypeEnum.error] = 'error';
+class AlertBoxComponent {
+    constructor() { }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+    }
+    /**
+     * @return {?}
+     */
+    dismiss() {
+        this.kind = AlertTypeEnum.none;
+        this.message = '';
+        this.subMessage = '';
+    }
+}
+AlertBoxComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'polp-md-alert-box',
+                template: "<div class=\"polp-alert-box\" *ngIf=\"kind > 0\">\n    <ng-container [ngSwitch]=\"kind\" class=\"polp-alert-box\">    \n        <div class=\"bs-like-alert alert-info\" *ngSwitchCase=\"1\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        info\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-warning\" *ngSwitchCase=\"2\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        warning\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-info\" *ngSwitchCase=\"3\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons animate-spin\">\n                        refresh\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-success\" *ngSwitchCase=\"4\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        check_circle\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-error\" *ngSwitchCase=\"5\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        error\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n    </ng-container>\n    <button mat-icon-button (click)=\"dismiss()\" class=\"close-btn\" *ngIf=\"dismissible\">\n        <i class=\"material-icons\">\n            close\n        </i>        \n    </button>\n</div>\n",
+                styles: [".polp-alert-box{position:relative}.polp-alert-box .close-btn{position:absolute;top:0;right:0}.polp-alert-box .bs-like-alert{display:flex;border-radius:2px;box-shadow:5px 5px 10px rgba(0,0,0,.3);color:#004085;background:#cce5ff;border-color:#cce5ff}.polp-alert-box .bs-like-alert a{color:#004085}.polp-alert-box .bs-like-alert a:hover{text-decoration:underline}.polp-alert-box .bs-like-alert>.message-body{margin:20px}.polp-alert-box .bs-like-alert>.message-body p{margin-top:0;margin-bottom:0}.polp-alert-box .bs-like-alert>.message-body p:first-child{display:inline-flex;align-items:center}.polp-alert-box .bs-like-alert>.message-body p:first-child i{margin-right:5px}.polp-alert-box .bs-like-alert.alert-warning{color:#856404;background:#fff3cd;border-color:#fff3cd}.polp-alert-box .bs-like-alert.alert-warning h3{border-bottom:1px solid}.polp-alert-box .bs-like-alert.alert-warning a{color:#856404}.polp-alert-box .bs-like-alert.alert-error{color:#721c24;background:#f8d7da;border-color:#f8d7da}.polp-alert-box .bs-like-alert.alert-error a{color:#721c24}.polp-alert-box .bs-like-alert.alert-error h3{border-bottom:1px solid}.polp-alert-box .bs-like-alert.alert-success{color:#155724;background:#d4edda;border-color:#d4edda}.polp-alert-box .bs-like-alert.alert-success a{color:#155724}.polp-alert-box .bs-like-alert.alert-success h3{border-bottom:1px solid}.polp-alert-box .bs-like-alert.alert-info{color:#0c5460;background:#d1ecf1;border-color:#d1ecf1}.polp-alert-box .bs-like-alert.alert-info a{color:#0c5460}.polp-alert-box .bs-like-alert.alert-info h3{border-bottom:1px solid}.animate-spin{-webkit-animation:4s linear infinite spin;animation:4s linear infinite spin}@-webkit-keyframes spin{100%{-webkit-transform:rotate(360deg)}}@keyframes spin{100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}"]
+            }] }
+];
+/** @nocollapse */
+AlertBoxComponent.ctorParameters = () => [];
+AlertBoxComponent.propDecorators = {
+    kind: [{ type: Input }],
+    message: [{ type: Input }],
+    subMessage: [{ type: Input }],
+    dismissible: [{ type: Input }]
+};
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 class PolpMdComponentsModule {
     /**
      * @param {?} parentModule
@@ -966,7 +949,6 @@ PolpMdComponentsModule.decorators = [
     { type: NgModule, args: [{
                 declarations: [
                     PolpMdIndicatorModal,
-                    EmailFormComponent,
                     RadioGroupFieldControl,
                     UploadFileComponent,
                     ConfirmDialogComponent,
@@ -974,7 +956,8 @@ PolpMdComponentsModule.decorators = [
                     SnackbarInfoComponent,
                     SnackbarSuccessComponent,
                     SnackbarWarnComponent,
-                    MessageFormComponent
+                    MessageFormComponent,
+                    AlertBoxComponent
                 ],
                 imports: [
                     CommonModule,
@@ -992,14 +975,13 @@ PolpMdComponentsModule.decorators = [
                 ],
                 exports: [
                     PolpMdIndicatorModal,
-                    EmailFormComponent,
                     RadioGroupFieldControl,
                     UploadFileComponent,
-                    ConfirmDialogComponent
+                    ConfirmDialogComponent,
+                    AlertBoxComponent
                 ],
                 entryComponents: [
                     PolpMdIndicatorModal,
-                    EmailFormComponent,
                     UploadFileComponent,
                     ConfirmDialogComponent,
                     SnackbarErrorComponent,
@@ -1028,6 +1010,6 @@ PolpMdComponentsModule.ctorParameters = () => [
  * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, EmailFormComponent, RadioGroupFieldControl, UploadFileComponent, ConfirmDialogComponent, MessageFormComponent, SnackbarErrorComponent, SnackbarInfoComponent, SnackbarSuccessComponent, SnackbarWarnComponent, PolpMdComponentsModule };
+export { TableDataSourceAdaptor, PolpMdIndicatorModal, PolpMdSpinnerServiceImpl, parseEmails, parseOnlyEmails, EmailFormAbstractComponent, RadioGroupFieldControl, UploadFileComponent, ConfirmDialogComponent, MessageFormComponent, SnackbarErrorComponent, SnackbarInfoComponent, SnackbarSuccessComponent, SnackbarWarnComponent, AlertTypeEnum, AlertBoxComponent, PolpMdComponentsModule };
 
 //# sourceMappingURL=polpware-md-components.js.map

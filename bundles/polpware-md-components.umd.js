@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('showdown'), require('rxjs'), require('@angular/cdk/coercion'), require('@angular/common/http'), require('@polpware/fe-utilities'), require('@angular/core'), require('@angular/common'), require('@angular/material'), require('@angular/forms'), require('ngx-chips'), require('ngx-autosize')) :
-    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'showdown', 'rxjs', '@angular/cdk/coercion', '@angular/common/http', '@polpware/fe-utilities', '@angular/core', '@angular/common', '@angular/material', '@angular/forms', 'ngx-chips', 'ngx-autosize'], factory) :
-    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.showdown,global.rxjs,global.ng.cdk.coercion,global.ng.common.http,global.feUtilities,global.ng.core,global.ng.common,global.ng.material,global.ng.forms,global.ngxChips,global.ngxAutosize));
-}(this, (function (exports,collections,showdown,rxjs,coercion,http,feUtilities,core,common,material,forms,ngxChips,ngxAutosize) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/cdk/collections'), require('rxjs'), require('@angular/cdk/coercion'), require('@angular/common/http'), require('@polpware/fe-utilities'), require('@angular/core'), require('@angular/common'), require('@angular/material'), require('@angular/forms'), require('ngx-chips'), require('ngx-autosize')) :
+    typeof define === 'function' && define.amd ? define('@polpware/md-components', ['exports', '@angular/cdk/collections', 'rxjs', '@angular/cdk/coercion', '@angular/common/http', '@polpware/fe-utilities', '@angular/core', '@angular/common', '@angular/material', '@angular/forms', 'ngx-chips', 'ngx-autosize'], factory) :
+    (factory((global.polpware = global.polpware || {}, global.polpware['md-components'] = {}),global.ng.cdk.collections,global.rxjs,global.ng.cdk.coercion,global.ng.common.http,global.feUtilities,global.ng.core,global.ng.common,global.ng.material,global.ng.forms,global.ngxChips,global.ngxAutosize));
+}(this, (function (exports,collections,rxjs,coercion,http,feUtilities,core,common,material,forms,ngxChips,ngxAutosize) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -234,6 +234,7 @@
                 // Schedule to dismiss the spinner
                 if (this._diaglogRef) {
                     this._dismissingTimer = setTimeout(function () {
+                        _this._dismissingTimer = null;
                         // Dismiss the dialog
                         if (_this._diaglogRef) {
                             _this._diaglogRef.close();
@@ -385,84 +386,6 @@
         };
         return EmailFormAbstractComponent;
     }());
-
-    /**
-     * @fileoverview added by tsickle
-     * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    var EmailFormComponent = /** @class */ (function (_super) {
-        __extends(EmailFormComponent, _super);
-        function EmailFormComponent(dialogRef, data) {
-            var _this = _super.call(this, dialogRef) || this;
-            _this.dialogRef = dialogRef;
-            _this.data = data;
-            data.title && (_this.title = data.title);
-            _this.messageBody = data.emailBody || '';
-            return _this;
-        }
-        Object.defineProperty(EmailFormComponent.prototype, "isSubmitDisabled", {
-            get: /**
-             * @return {?}
-             */ function () {
-                return this.emails.length === 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        // Override
-        // Override
-        /**
-         * @return {?}
-         */
-        EmailFormComponent.prototype.onSubmit =
-            // Override
-            /**
-             * @return {?}
-             */
-            function () {
-                // body
-                /** @type {?} */
-                var messageBody = this.messageBody;
-                // Convert it into html
-                /** @type {?} */
-                var converter = new showdown.Converter();
-                messageBody = converter.makeHtml(messageBody);
-                // Prepare email list
-                /** @type {?} */
-                var emails = [];
-                this.emails.forEach(function (elem) {
-                    /** @type {?} */
-                    var x = elem || (elem.value);
-                    /** @type {?} */
-                    var y = parseOnlyEmails(x);
-                    y.forEach(function (m) {
-                        emails.push(m);
-                    });
-                });
-                /** @type {?} */
-                var outputs = {
-                    confirmed: true,
-                    emailReceivers: emails,
-                    emailBody: messageBody,
-                    emailTitle: this.data.emailTitle || '' // todo:
-                };
-                this.dialogRef.close(outputs);
-            };
-        EmailFormComponent.decorators = [
-            { type: core.Component, args: [{
-                        selector: 'polp-md-email-form',
-                        template: "<h2 mat-dialog-title>\r\n    {{title}}\r\n    <button class=\"float-right\"\r\n            mat-icon-button\r\n            tabIndex=\"-1\"\r\n            [mat-dialog-close]=\"true\">\r\n        <mat-icon>close</mat-icon>\r\n    </button>\r\n</h2>\r\n\r\n<mat-dialog-content>\r\n\r\n    <form name=\"emailForm\" autocomplete=\"off\">\r\n        <div class=\"flex-box flex-column margin-bottom-15\">\r\n            <tag-input [(ngModel)]=\"emails\" #emailInputBox\r\n                       name=\"emailInputs\"\r\n                       [addOnPaste]=\"true\"\r\n                       [modelAsStrings]=\"true\"\r\n                       [trimTags]=\"true\"\r\n                       [editable]=\"true\"\r\n                       (focusout)=\"onOutOfTagInput($event)\"\r\n                       [errorMessages]=\"errorMessages\"\r\n                       [validators]=\"validators\"\r\n                       [secondaryPlaceholder]=\"'Emails'\"\r\n                       [separatorKeyCodes]=\"[32,44,58,59]\"\r\n                       [placeholder]=\"'More Emails'\">\r\n            </tag-input>\r\n\r\n            <div class=\"full-width margin-top-10\">\r\n                <textarea name=\"messageBody\"\r\n                          class=\"full-width\"\r\n                          #emailBody\r\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\r\n                          placeholder=\"Type your personal message here\"\r\n                          [(ngModel)]=\"messageBody\">\r\n                </textarea>\r\n            </div>\r\n\r\n        </div>\r\n    </form>\r\n\r\n</mat-dialog-content>\r\n\r\n<mat-dialog-actions>\r\n    <button mat-flat-button\r\n            color=\"primary\"\r\n            [disabled]=\"isSubmitDisabled\"\r\n            (click)=\"onSubmit()\">\r\n        Send\r\n    </button>\r\n</mat-dialog-actions>\r\n"
-                    }] }
-        ];
-        /** @nocollapse */
-        EmailFormComponent.ctorParameters = function () {
-            return [
-                { type: material.MatDialogRef },
-                { type: undefined, decorators: [{ type: core.Inject, args: [material.MAT_DIALOG_DATA,] }] }
-            ];
-        };
-        return EmailFormComponent;
-    }(EmailFormAbstractComponent));
 
     /**
      * @fileoverview added by tsickle
@@ -1014,7 +937,7 @@
         MessageFormComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'polp-md-message-form',
-                        template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            (click)=\"close()\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n        <div class=\"flex-box flex-column margin-bottom-15\">\n            <div class=\"full-width margin-top-10\">\n                <textarea name=\"messageBody\"\n                          class=\"full-width\"\n                          #emailBody\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\n                          placeholder=\"Type your personal message here\"\n                          [(ngModel)]=\"messageBody\">\n                </textarea>\n            </div>\n\n        </div>\n\n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-button (click)=\"close()\">No Thanks</button>\n    <button mat-flat-button\n            color=\"primary\"\n            [disabled]=\"isSubmitDisabled\"\n            (click)=\"confirm()\">\n        Ok\n    </button>\n</mat-dialog-actions>\n",
+                        template: "<h2 mat-dialog-title>\n    {{title}}\n    <button class=\"float-right\"\n            mat-icon-button\n            tabIndex=\"-1\"\n            (click)=\"close()\">\n        <mat-icon>close</mat-icon>\n    </button>\n</h2>\n\n<mat-dialog-content>\n\n        <div class=\"flex-box flex-column margin-bottom-15\">\n            <div class=\"full-width margin-top-10\">\n                <textarea name=\"messageBodyInput\"\n                          class=\"full-width\"\n                          #emailBody\n                          autosize [minRows]=\"5\" [maxRows]=\"10\"\n                          placeholder=\"Type your personal message here\"\n                          [(ngModel)]=\"messageBody\">\n                </textarea>\n            </div>\n\n        </div>\n\n</mat-dialog-content>\n\n<mat-dialog-actions>\n    <button mat-button (click)=\"close()\">No Thanks</button>\n    <button mat-flat-button\n            color=\"primary\"\n            [disabled]=\"isSubmitDisabled\"\n            (click)=\"confirm()\">\n        Ok\n    </button>\n</mat-dialog-actions>\n",
                         styles: [""]
                     }] }
         ];
@@ -1128,6 +1051,65 @@
      * @fileoverview added by tsickle
      * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
+    /** @enum {number} */
+    var AlertTypeEnum = {
+        none: 0,
+        info: 1,
+        warning: 2,
+        running: 3,
+        success: 4,
+        error: 5,
+    };
+    AlertTypeEnum[AlertTypeEnum.none] = 'none';
+    AlertTypeEnum[AlertTypeEnum.info] = 'info';
+    AlertTypeEnum[AlertTypeEnum.warning] = 'warning';
+    AlertTypeEnum[AlertTypeEnum.running] = 'running';
+    AlertTypeEnum[AlertTypeEnum.success] = 'success';
+    AlertTypeEnum[AlertTypeEnum.error] = 'error';
+    var AlertBoxComponent = /** @class */ (function () {
+        function AlertBoxComponent() {
+        }
+        /**
+         * @return {?}
+         */
+        AlertBoxComponent.prototype.ngOnInit = /**
+         * @return {?}
+         */
+            function () {
+            };
+        /**
+         * @return {?}
+         */
+        AlertBoxComponent.prototype.dismiss = /**
+         * @return {?}
+         */
+            function () {
+                this.kind = AlertTypeEnum.none;
+                this.message = '';
+                this.subMessage = '';
+            };
+        AlertBoxComponent.decorators = [
+            { type: core.Component, args: [{
+                        selector: 'polp-md-alert-box',
+                        template: "<div class=\"polp-alert-box\" *ngIf=\"kind > 0\">\n    <ng-container [ngSwitch]=\"kind\" class=\"polp-alert-box\">    \n        <div class=\"bs-like-alert alert-info\" *ngSwitchCase=\"1\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        info\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-warning\" *ngSwitchCase=\"2\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        warning\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-info\" *ngSwitchCase=\"3\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons animate-spin\">\n                        refresh\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-success\" *ngSwitchCase=\"4\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        check_circle\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n        <div class=\"bs-like-alert alert-error\" *ngSwitchCase=\"5\">\n            <div class=\"message-body\">\n                <p>\n                    <i class=\"material-icons\">\n                        error\n                    </i>\n                    {{message}}\n                </p>\n                <p *ngIf=\"subMessage\">\n                    <small>\n                        {{subMessage}}\n                    </small>\n                </p>\n            </div>\n        </div>\n    </ng-container>\n    <button mat-icon-button (click)=\"dismiss()\" class=\"close-btn\" *ngIf=\"dismissible\">\n        <i class=\"material-icons\">\n            close\n        </i>        \n    </button>\n</div>\n",
+                        styles: [".polp-alert-box{position:relative}.polp-alert-box .close-btn{position:absolute;top:0;right:0}.polp-alert-box .bs-like-alert{display:flex;border-radius:2px;box-shadow:5px 5px 10px rgba(0,0,0,.3);color:#004085;background:#cce5ff;border-color:#cce5ff}.polp-alert-box .bs-like-alert a{color:#004085}.polp-alert-box .bs-like-alert a:hover{text-decoration:underline}.polp-alert-box .bs-like-alert>.message-body{margin:20px}.polp-alert-box .bs-like-alert>.message-body p{margin-top:0;margin-bottom:0}.polp-alert-box .bs-like-alert>.message-body p:first-child{display:inline-flex;align-items:center}.polp-alert-box .bs-like-alert>.message-body p:first-child i{margin-right:5px}.polp-alert-box .bs-like-alert.alert-warning{color:#856404;background:#fff3cd;border-color:#fff3cd}.polp-alert-box .bs-like-alert.alert-warning h3{border-bottom:1px solid}.polp-alert-box .bs-like-alert.alert-warning a{color:#856404}.polp-alert-box .bs-like-alert.alert-error{color:#721c24;background:#f8d7da;border-color:#f8d7da}.polp-alert-box .bs-like-alert.alert-error a{color:#721c24}.polp-alert-box .bs-like-alert.alert-error h3{border-bottom:1px solid}.polp-alert-box .bs-like-alert.alert-success{color:#155724;background:#d4edda;border-color:#d4edda}.polp-alert-box .bs-like-alert.alert-success a{color:#155724}.polp-alert-box .bs-like-alert.alert-success h3{border-bottom:1px solid}.polp-alert-box .bs-like-alert.alert-info{color:#0c5460;background:#d1ecf1;border-color:#d1ecf1}.polp-alert-box .bs-like-alert.alert-info a{color:#0c5460}.polp-alert-box .bs-like-alert.alert-info h3{border-bottom:1px solid}.animate-spin{-webkit-animation:4s linear infinite spin;animation:4s linear infinite spin}@-webkit-keyframes spin{100%{-webkit-transform:rotate(360deg)}}@keyframes spin{100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}"]
+                    }] }
+        ];
+        /** @nocollapse */
+        AlertBoxComponent.ctorParameters = function () { return []; };
+        AlertBoxComponent.propDecorators = {
+            kind: [{ type: core.Input }],
+            message: [{ type: core.Input }],
+            subMessage: [{ type: core.Input }],
+            dismissible: [{ type: core.Input }]
+        };
+        return AlertBoxComponent;
+    }());
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     var PolpMdComponentsModule = /** @class */ (function () {
         function PolpMdComponentsModule(parentModule) {
             if (parentModule) {
@@ -1149,7 +1131,6 @@
             { type: core.NgModule, args: [{
                         declarations: [
                             PolpMdIndicatorModal,
-                            EmailFormComponent,
                             RadioGroupFieldControl,
                             UploadFileComponent,
                             ConfirmDialogComponent,
@@ -1157,7 +1138,8 @@
                             SnackbarInfoComponent,
                             SnackbarSuccessComponent,
                             SnackbarWarnComponent,
-                            MessageFormComponent
+                            MessageFormComponent,
+                            AlertBoxComponent
                         ],
                         imports: [
                             common.CommonModule,
@@ -1175,14 +1157,13 @@
                         ],
                         exports: [
                             PolpMdIndicatorModal,
-                            EmailFormComponent,
                             RadioGroupFieldControl,
                             UploadFileComponent,
-                            ConfirmDialogComponent
+                            ConfirmDialogComponent,
+                            AlertBoxComponent
                         ],
                         entryComponents: [
                             PolpMdIndicatorModal,
-                            EmailFormComponent,
                             UploadFileComponent,
                             ConfirmDialogComponent,
                             SnackbarErrorComponent,
@@ -1221,7 +1202,6 @@
     exports.parseEmails = parseEmails;
     exports.parseOnlyEmails = parseOnlyEmails;
     exports.EmailFormAbstractComponent = EmailFormAbstractComponent;
-    exports.EmailFormComponent = EmailFormComponent;
     exports.RadioGroupFieldControl = RadioGroupFieldControl;
     exports.UploadFileComponent = UploadFileComponent;
     exports.ConfirmDialogComponent = ConfirmDialogComponent;
@@ -1230,6 +1210,8 @@
     exports.SnackbarInfoComponent = SnackbarInfoComponent;
     exports.SnackbarSuccessComponent = SnackbarSuccessComponent;
     exports.SnackbarWarnComponent = SnackbarWarnComponent;
+    exports.AlertTypeEnum = AlertTypeEnum;
+    exports.AlertBoxComponent = AlertBoxComponent;
     exports.PolpMdComponentsModule = PolpMdComponentsModule;
 
     Object.defineProperty(exports, '__esModule', { value: true });
