@@ -5,6 +5,7 @@ export interface IMessageFormInput {
     message: string;
 }
 export interface IMessageFormExport {
+    confirmed: boolean;
     message: string;
 }
 export declare class MessageFormComponent implements OnInit {
